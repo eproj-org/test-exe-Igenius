@@ -1,3 +1,10 @@
+terraform {
+  backend "gcs" {}
+}
+provider "google" {
+  project = "dotted-hulling-291009"
+}
+
 module "staging-pythonapp-pool" {
   source                   = "./lb-python"
   name                     = "IGexe-pool"

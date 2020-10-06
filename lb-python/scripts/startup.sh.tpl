@@ -1,16 +1,4 @@
-# Copyright 2019 Google LLC All Rights Reserved.
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
+#!/bin/bash
 
 # Echo commands
 set -v
@@ -30,21 +18,22 @@ useradd -m -d /home/pythonapp pythonapp
 
 # Fetch source code
 export HOME=/root
-git clone https://github.com/GoogleCloudPlatform/getting-started-python.git /opt/app
+rm -rf /opt/app
+git clone https://github.com/eproj-org/test-exe-Igenius.git /opt/app
 
 # Python environment setup
-virtualenv -p python3 /opt/app/gce/env
-source /opt/app/gce/env/bin/activate
-/opt/app/gce/env/bin/pip install google-api-python-client
-/opt/app/gce/env/bin/pip install --upgrade oauth2client
-/opt/app/gce/env/bin/pip install --upgrade google-cloud-asset
-/opt/app/gce/env/bin/pip install -r /opt/app/gce/requirements.txt
+virtualenv -p python3 /opt/app/env
+source /opt/app/env/bin/activate
+/opt/app/env/bin/pip install google-api-python-client
+/opt/app/env/bin/pip install --upgrade oauth2client
+/opt/app/env/bin/pip install --upgrade google-cloud-asset
+/opt/app/env/bin/pip install -r /opt/app/gce/requirements.txt
 
 # Set ownership to newly created account
 chown -R pythonapp:pythonapp /opt/app
 
 # Put supervisor configuration in proper place
-cp /opt/app/gce/python-app.conf /etc/supervisor/conf.d/python-app.conf
+cp /opt/app/python-app.conf /etc/supervisor/conf.d/python-app.conf
 
 # Start service via supervisorctl
 supervisorctl reread

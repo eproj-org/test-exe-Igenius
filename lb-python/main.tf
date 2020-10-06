@@ -59,10 +59,15 @@ resource "google_compute_instance_template" "pythonapp-template" {
   }
 }
 
+data "google_compute_image" "my_image" {
+  family  = "debian-9"
+  project = "debian-cloud"
+}
+
 resource "google_compute_instance" "pythonapp" {
    count = var.mig_enabled ? 0 : 1
 
-  name  = "pythonapp-${var.env}-"
+  name  = "pythonapp-${var.env}"
   machine_type = var.machine_type
   zone =var.zone
 
@@ -79,7 +84,10 @@ resource "google_compute_instance" "pythonapp" {
 
   # boot disk
   boot_disk {
-    source = var.compute_image
+    initialize_params {
+      image = data.google_compute_image.my_image.self_link
+    }
+    #source = var.compute_image
     auto_delete  = true
   }
 
@@ -103,11 +111,11 @@ resource "google_compute_instance" "pythonapp" {
 
 
   # Shielded VM provides verifiable integrity to prevent against malware and rootkits
-  shielded_instance_config {
-    enable_secure_boot          = true
-    enable_vtpm                 = true
-    enable_integrity_monitoring = true
-  }
+#  shielded_instance_config {
+#    enable_secure_boot          = true
+#    enable_vtpm                 = true
+#    enable_integrity_monitoring = true
+#  }
 }
 
 
@@ -126,6 +134,11 @@ resource "google_compute_instance_group" "unmanaged-python-pool" {
     port = "8080"
   }
 
+ # Instance Templates cannot be updated after creation with the Google Cloud Platform API.
+  # Terraform will destroy the existing resource and create a replacement
+  lifecycle {
+    create_before_destroy = true
+  }
 
   zone = "us-central1-a"
 }
@@ -194,3 +207,28 @@ resource "google_compute_health_check" "pythonapp_autohealing_health_check" {
     port         = "8080"
   }
 }
+
+resource "google_compute_firewall" "pythonapp-lb-network-allow-ssh" {
+  name    = "pythonapp-lb-allow-ssh-${var.env}"
+  network = "${var.network}"
+
+  allow {
+    protocol = "tcp"
+    ports    = ["22"]
+  }
+
+  target_tags = ["pythonapp-pool", "${var.name}"]
+}
+
+resource "google_compute_firewall" "pythonapp-lb-network-allow-http" {
+  name    = "pythonapp-lb-allow-ssh-${var.env}"
+  network = "${var.network}"
+
+  allow {
+    protocol = "tcp"
+    ports    = ["80,8080"]
+  }
+  source_ranges = [130.211.0.0/22, 35.191.0.0/16, 130.211.0.0/22, 35.191.0.0/16]
+  target_tags = ["pythonapp-pool", "${var.name}"]
+}
+
