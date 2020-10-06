@@ -6,8 +6,8 @@ provider "google" {
 }
 
 module "staging-pythonapp-pool" {
-  source                   = "./lb-python"
-  name                     = "IGexe-pool"
+  source                   = "./python-group"
+  name                     = "igexe-py-app"
   env                      = "test"
   region                   = "us-central1"
   #machine_type             = "f1-micro"
@@ -18,5 +18,20 @@ module "staging-pythonapp-pool" {
   network						= var.network
   subnetwork					= var.subnetwork
 
+  #target_pools = [module.staging-external-lb.target_pool]  ONLY FOR MIG
+
+}
+
+module "staging-external-lb" {
+  source         = "./net-load-balancer"
+  name           = "igexe-py-app"
+  env            = "test"
+  region         = "us-central1"
+  network        = var.network
+  subnetwork     = var.subnetwork
+  instance_group = module.staging-pythonapp-pool.instance_group
+  internal_lb_ip = "10.11.0.2"
+  service_port   = 8080
+  external_lb_ip = "34.91.73.128"
 }
 

@@ -22,6 +22,10 @@ from flask import Flask, request
 app = Flask(__name__)
 
 
+app.route('/',methods=['GET'])
+def health():
+    return "Ok"
+
 @app.route('/compute.list', methods=['GET'])
 def list_compute():
     credentials = GoogleCredentials.get_application_default()

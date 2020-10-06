@@ -1,1 +1,1 @@
-gce_cmds: /opt/app/gce/env/bin/gunicorn -b 0.0.0.0:8080 main:app
+gce_cmds: /opt/app/env/bin/gunicorn -b 0.0.0.0:8080 main:app
