@@ -1,3 +1,0 @@
-variable network  {}
-variable subnetwork  {}
-
