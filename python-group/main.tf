@@ -8,7 +8,7 @@ resource "google_compute_instance_template" "pythonapp-template" {
   name_prefix  = "pythonapp-template-${var.env}-"
   machine_type = var.machine_type
   region       = var.region
-
+  
   tags = [
     "pythonapp-pool"
   ]
@@ -52,15 +52,15 @@ resource "google_compute_instance_template" "pythonapp-template" {
   }
 
   # Shielded VM provides verifiable integrity to prevent against malware and rootkits
-  shielded_instance_config {
-    enable_secure_boot          = true
-    enable_vtpm                 = true
-    enable_integrity_monitoring = true
-  }
+#  shielded_instance_config {
+#    enable_secure_boot          = true
+#    enable_vtpm                 = true
+#    enable_integrity_monitoring = true
+#  }
 }
 
 data "google_compute_image" "my_image" {
-  family  = "debian-9"
+  family  = "debian-10"
   project = "debian-cloud"
 }
 
@@ -70,6 +70,7 @@ resource "google_compute_instance" "pythonapp" {
   name  = "pythonapp-${var.env}"
   machine_type = var.machine_type
   zone =var.zone
+  allow_stopping_for_update = true 
 
   tags = [
     "pythonapp-pool"

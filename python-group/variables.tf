@@ -21,7 +21,7 @@ variable machine_type {
 
 variable compute_image {
   description = "Image used for compute VMs."
-  default     = "projects/debian-cloud/global/images/family/debian-9"
+  default     = "projects/debian-cloud/global/images/family/debian-10"
 }
 
 variable target_pools {
@@ -44,6 +44,8 @@ variable service_account_scopes {
     "https://www.googleapis.com/auth/logging.write",
     "https://www.googleapis.com/auth/monitoring.write",
     "https://www.googleapis.com/auth/devstorage.full_control",
+    "https://www.googleapis.com/auth/cloud-platform"
+
   ]
 }
 
