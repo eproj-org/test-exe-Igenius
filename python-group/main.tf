@@ -3,7 +3,7 @@ data "template_file" "startup_script_config" {
 }
 
 resource "google_compute_instance_template" "pythonapp-template" {
-   count = var.mig_enabled ? 1 : 0
+   count = var.ist_g_enabled ? 1 : 0
 
   name_prefix  = "pythonapp-template-${var.env}-"
   machine_type = var.machine_type
@@ -65,7 +65,7 @@ data "google_compute_image" "my_image" {
 }
 
 resource "google_compute_instance" "pythonapp" {
-   count = var.mig_enabled ? 0 : 1
+   count = var.ist_g_enabled ? 1 : 0
 
   name  = "pythonapp-${var.env}"
   machine_type = var.machine_type
@@ -120,7 +120,7 @@ resource "google_compute_instance" "pythonapp" {
 
 
 resource "google_compute_instance_group" "unmanaged-python-pool" {
-  count = var.mig_enabled ? 0 : 1
+  count = var.ist_g_enabled ? 1 : 0
 
   name        = "terraform-webservers"
   description = "Terraform test instance group"
@@ -144,13 +144,13 @@ resource "google_compute_instance_group" "unmanaged-python-pool" {
 }
 
 resource "google_compute_region_instance_group_manager" "pythonapp-group-manager" {
-  count = var.mig_enabled ? 1 : 0
+  count = var.ist_g_enabled ? 1 : 0
 
   provider           = google-beta
-  name               = "${var.name}-migmanager-${var.env}"
+  name               = "${var.name}-${var.env}"
   base_instance_name = "pythonapp-${var.env}"
   region             = var.region
-  #target_pools       = var.target_pools
+  target_pools       = var.target_pools
 
   version {
     name              = "pythonapp"
@@ -174,7 +174,7 @@ resource "google_compute_region_instance_group_manager" "pythonapp-group-manager
 }
 
 resource "google_compute_region_autoscaler" "pythonapp_autoscaler" {
-  count = var.mig_enabled ? 1 : 0
+  count = var.ist_g_enabled ? 1 : 0
 
   provider = google-beta
   name     = "${var.name}-autoscaler-${var.env}"
@@ -193,7 +193,7 @@ resource "google_compute_region_autoscaler" "pythonapp_autoscaler" {
 }
 
 resource "google_compute_health_check" "pythonapp_autohealing_health_check" {
-  count = var.mig_enabled ? 1 : 0
+  count = var.ist_g_enabled ? 1 : 0
 
   name                = "${var.name}-autohealing-health-check-${var.env}"
 

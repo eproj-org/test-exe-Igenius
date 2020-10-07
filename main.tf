@@ -4,6 +4,9 @@ terraform {
 provider "google" {
   project = "dotted-hulling-291009"
 }
+provider "google-beta" {
+  project = "dotted-hulling-291009"
+}
 
 module "staging-pythonapp-pool" {
   source                   = "./python-group"
@@ -18,7 +21,7 @@ module "staging-pythonapp-pool" {
   network						= var.network
   subnetwork					= var.subnetwork
 
-  #target_pools = [module.staging-external-lb.target_pool]  ONLY FOR MIG
+  target_pools = [module.staging-external-lb.target_pool] 
 
 }
 

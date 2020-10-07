@@ -1,6 +1,6 @@
 
-variable "mig_enabled" {
-     default  = false
+variable "ist_g_enabled" {
+     default  = true
 }
 variable "name" {}
 
