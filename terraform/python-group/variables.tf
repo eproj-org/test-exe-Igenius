@@ -79,7 +79,7 @@ variable autoscaling_cooldown_period {
   
   # With the current setup, it takes 2 minutes for setup since startup
   # Let's give it some room
-  default     = 180
+  default     = 120
 }
 
 variable autoscaling_metric {
@@ -88,15 +88,10 @@ variable autoscaling_metric {
   default     = []
 }
 
-variable autoscaling_active_connections_target {
-  description = <<EOF
-    The target active connection number to maintain in each VM, that triggers the autoscaling.
-    OS/NGINX/Network settings can influence this values, but with current setup the limit for each VM is about 64k.
-    We should set a target of about 60% that value, to leave enough room/time for scaling.
-  EOF
-
-  default = 40000
+variable health_port {
+   default = "8080"
 }
+
 
 variable autoscaling_cpu_utilization_target {
   description = <<EOF

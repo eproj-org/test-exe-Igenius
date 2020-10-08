@@ -121,7 +121,7 @@ resource "google_compute_health_check" "pythonapp_autohealing_health_check" {
 
   http_health_check {
     request_path = "/"
-    port         = "8080"
+    port         = var.health_port
   }
 }
 
@@ -137,15 +137,15 @@ resource "google_compute_firewall" "pythonapp-lb-network-allow-sh" {
   target_tags = ["pythonapp-pool", var.name]
 }
 
-resource "google_compute_firewall" "pythonapp-lb-network-allow-http" {
-  name    = "pythonapp-lb-allow-http-${var.env}"
+resource "google_compute_firewall" "pythonapp-healthcheck_autoheal" {
+  name    = "pythonapp-healthcheck-mgr-${var.env}"
   network = var.network
 
   allow {
     protocol = "tcp"
-    ports    = ["80","8080"]
+    ports    = [var.health_port]
   }
-  source_ranges = ["130.211.0.0/22", "35.191.0.0/16", "130.211.0.0/22", "35.191.0.0/16"]
+  source_ranges = ["130.211.0.0/22", "35.191.0.0/16"]
   target_tags = ["pythonapp-pool", var.name]
 }
 
