@@ -2,10 +2,10 @@ terraform {
   backend "gcs" {}
 }
 provider "google" {
-  project = "dotted-hulling-291009"
+  project = "igexe-git"
 }
 provider "google-beta" {
-  project = "dotted-hulling-291009"
+  project = "igexe-git"
 }
 
 module "staging-pythonapp-pool" {

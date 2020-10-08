@@ -4,31 +4,34 @@ This repository contains ( for easyness sake is the same repository) :
 1) python application (REST api) integrated with stackdriver Logging
 2) terraform script 
 
-Requirements : Network  and subnetwork should exist with Nat servicE RUNNING ( to access a github apt-repo and dockerhub)
+Requirements : Network  and subnetwork should exist with Nat service RUNNING ( to access  github repo, apt repo and dockerhub)
 
 Terraform scripts create the following resources:
 
- 2 loadbalancer (esterno ed interno di tipo Network)
- 1 managed istance group with autoscaler (the same for the 2 ldbalancer)
- 1 ist template
- ...firewallrule + healing  service healcheck
+ - nr.2 loadbalancer (esterno ed interno di tipo Network)
+ - nr.1 managed istance group with autoscaler (the same for the 2 ldbalancer)
+ - nr.1 istanc template
+ - firewallrules for service and health-check and ssh traffic 
+ - healing service healchecks
 
- module.staging-external-lb.google_compute_firewall.pythonapp-lb-fw
- module.staging-external-lb.google_compute_forwarding_rule.external
- module.staging-external-lb.google_compute_forwarding_rule.internal
- module.staging-external-lb.google_compute_health_check.pythonapp
- module.staging-external-lb.google_compute_http_health_check.pythonapp
- module.staging-external-lb.google_compute_region_backend_service.internal
- module.staging-external-lb.google_compute_target_pool.pythonapp-pool
- module.staging-pythonapp-pool.data.template_file.startup_script_config
- module.staging-pythonapp-pool.google_compute_firewall.pythonapp-healthcheck_autoheal
- module.staging-pythonapp-pool.google_compute_firewall.pythonapp-lb-network-allow-sh
- module.staging-pythonapp-pool.google_compute_health_check.pythonapp_autohealing_health_check[0]
- module.staging-pythonapp-pool.google_compute_instance_template.pythonapp-template[0]
- module.staging-pythonapp-pool.google_compute_region_autoscaler.pythonapp_autoscaler[0]
- module.staging-pythonapp-pool.google_compute_region_instance_group_manager.pythonapp-group-manager[0]
+ More specifically:
 
- FLOW TO START/DEPLOy
+ google_compute_firewall.pythonapp-lb-fw
+ google_compute_forwarding_rule.external
+ google_compute_forwarding_rule.internal
+ google_compute_health_check.pythonapp
+ google_compute_http_health_check.pythonapp
+ google_compute_region_backend_service.internal
+ google_compute_target_pool.pythonapp-pool
+ data.template_file.startup_script_config
+ google_compute_firewall.pythonapp-healthcheck_autoheal
+ google_compute_firewall.pythonapp-lb-network-allow-sh
+ google_compute_health_check.pythonapp_autohealing_health_check[0]
+ google_compute_instance_template.pythonapp-template[0]
+ google_compute_region_autoscaler.pythonapp_autoscaler[0]
+ google_compute_region_instance_group_manager.pythonapp-group-manager[0]
+
+ FLOW TO START/DEPLOY
 
 - Project creation
 

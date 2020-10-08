@@ -32,7 +32,7 @@ variable target_pools {
 
 variable service_account_email {
   description = "The email of the service account for the instance template."
-  default     = "sa-compute-asset@dotted-hulling-291009.iam.gserviceaccount.com"
+  default     = "sa-compute-asset@igexe-git.iam.gserviceaccount.com"
 }
 
 variable service_account_scopes {
