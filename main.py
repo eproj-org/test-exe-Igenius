@@ -34,26 +34,29 @@ def health():
 @app.route('/compute.list', methods=['GET'])
 def list_compute():
 
-    service = discovery.build('compute', 'v1', credentials=credentials)
+    try:
+        service = discovery.build('compute', 'v1', credentials=credentials)
 
-    # Project ID for this request.
-    project_name = request.args.get('project')
-
-    # The name of the zone for this request.
-    zone_name = request.args.get('zone')
-
-    request_api= service.instances().list(project=project_name, zone=zone_name)
-    all_instances = []
-    while request_api is not None:
-        response = request_api.execute()
-
-        for instance in response['items']:
-            all_instances.append(instance)
-            pprint(instance)
-            print('#################################################################')
-
-        request_api = service.instances().list_next(previous_request=request, previous_response=response)
-    return {'all_instances': all_instances}
+        # Project ID for this request.
+        project_name = request.args.get('project')
+    
+        # The name of the zone for this request.
+        zone_name = request.args.get('zone')
+    
+        request_api= service.instances().list(project=project_name, zone=zone_name)
+        all_instances = []
+        while request_api is not None:
+            response = request_api.execute()
+    
+            for instance in response['items']:
+                all_instances.append(instance)
+                pprint(instance)
+                print('#################################################################')
+    
+            request_api = service.instances().list_next(previous_request=request, previous_response=response)
+        return {'all_instances': all_instances}
+    except Exception as e:
+        return f"An Error Occured. Probably due to the parameters: {e}", 400
 
 def compute_isrunning(par_project,  par_zone, par_instance):
 
@@ -75,36 +78,41 @@ def list_assets():
 #  page_size = 'Num of assets in one page, which must be between 1 and
 # 1000 (both inclusively)'
 
-    # The name of the organization for this request.
-    parent_arg = request.args.get('parent')
-
-    #project_resource = "projects/{}".format(project_id)
-    content_type = asset_v1p5beta1.ContentType.RESOURCE
-    client = asset_v1p5beta1.AssetServiceClient()
+    try:
+        # The name of the organization for this request.
+        parent_arg = request.args.get('parent')
     
-    # Call ListAssets v1p5beta1 to list assets.
-    response = client.list_assets(
-        request={
-            "parent": parent_arg,
-            "read_time": None,
-            "asset_types": ['compute.googleapis.com.Instance'],
-            "content_type": 'CONTENT_TYPE_UNSPECIFIED',
-            #"page_size": page_size,
-        }
-    )
+        #project_resource = "projects/{}".format(project_id)
+        content_type = asset_v1p5beta1.ContentType.RESOURCE
+        client = asset_v1p5beta1.AssetServiceClient()
+        
+        # Call ListAssets v1p5beta1 to list assets.
+        response = client.list_assets(
+            request={
+                "parent": parent_arg,
+                "read_time": None,
+                "asset_types": ['compute.googleapis.com.Instance'],
+                "content_type": 'CONTENT_TYPE_UNSPECIFIED',
+                #"page_size": page_size,
+            }
+        )
+        
+        all_zones_with_running_instances = set()
+        for asset in response.assets:
+            info_list =  asset.name.split('/')
+            project = info_list[4]
+            zone = info_list[6]
+            instance = info_list[8]
+            if compute_isrunning(project, zone, instance) == True :
+                all_zones_with_running_instances.add(zone)
     
-    all_zones_with_running_instances = set()
-    for asset in response.assets:
-        info_list =  asset.name.split('/')
-        project = info_list[4]
-        zone = info_list[6]
-        instance = info_list[8]
-        if compute_isrunning(project, zone, instance) == True :
-            all_zones_with_running_instances.add(zone)
+        ser_set_running = list(all_zones_with_running_instances)
+        pprint(ser_set_running)
+        return {'all_zones_with_running_instances': ser_set_running} 
 
-    ser_set_running = list(all_zones_with_running_instances)
-    pprint(ser_set_running)
-    return {'all_zones_with_running_instances': ser_set_running} 
+    except Exception as e:
+        return f"An Error Occured. Probably due to the parameters: {e}", 400
 
+    
 if __name__ == '__main__':
     app.run(host='127.0.0.1', port=8080, debug=True)
