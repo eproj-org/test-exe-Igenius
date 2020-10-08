@@ -21,6 +21,11 @@ from pprint import pprint
 from flask import Flask, request
 app = Flask(__name__)
 
+# Inizialize credentials. ACD loooks first for GOOGLE_APPLIICATION_CREDENTIAL and then for Service account
+# nothing to define here
+credentials = GoogleCredentials.get_application_default()
+
+
 
 @app.route('/',methods=['GET'])
 def health():
@@ -28,7 +33,6 @@ def health():
 
 @app.route('/compute.list', methods=['GET'])
 def list_compute():
-    credentials = GoogleCredentials.get_application_default()
 
     service = discovery.build('compute', 'v1', credentials=credentials)
 
@@ -52,7 +56,6 @@ def list_compute():
     return {'all_instances': all_instances}
 
 def compute_isrunning(par_project,  par_zone, par_instance):
-    credentials = GoogleCredentials.get_application_default()
 
     service = discovery.build('compute', 'v1', credentials=credentials)
 
