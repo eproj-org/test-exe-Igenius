@@ -17,19 +17,33 @@ Terraform scripts create the following resources:
  More specifically:
 
  google_compute_firewall.pythonapp-lb-fw
+
  google_compute_forwarding_rule.external
+
  google_compute_forwarding_rule.internal
+
  google_compute_health_check.pythonapp
+
  google_compute_http_health_check.pythonapp
+
  google_compute_region_backend_service.internal
+
  google_compute_target_pool.pythonapp-pool
+
  data.template_file.startup_script_config
+
  google_compute_firewall.pythonapp-healthcheck_autoheal
+
  google_compute_firewall.pythonapp-lb-network-allow-sh
+
  google_compute_health_check.pythonapp_autohealing_health_check[0]
+
  google_compute_instance_template.pythonapp-template[0]
+
  google_compute_region_autoscaler.pythonapp_autoscaler[0]
+
  google_compute_region_instance_group_manager.pythonapp-group-manager[0]
+
 
  FLOW TO START/DEPLOY
 
