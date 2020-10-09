@@ -67,7 +67,7 @@ Terraform scripts create the following resources:
 
 Note :
 1) the service account used by terraform needs  "serviceaccountuser" role in addition of normal role compute.write storage.write, e network.update   
-2) the service account used in vm (istance tempalete ) should have asset.reader credentials  and should be granted to terraform's service account
+2) the service account used in vm (istance tempalete ) should have "asset.reader" e "logs.writer" credentials  and should be granted to terraform's service account
 3) update service_account.email field in python-group/variables.tf file
 
 
