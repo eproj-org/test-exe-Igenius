@@ -1,5 +1,12 @@
+data "google_container_registry_image" "python-app" {
+  name = "app-python"
+}
+
 data "template_file" "startup_script_config" {
   template = file("${path.module}/scripts/startup.sh.tpl")
+  vars = {
+	 gcr_location = data.google_container_registry_image.python-app.image_url
+  }
 }
 
 resource "google_compute_instance_template" "pythonapp-template" {
@@ -27,8 +34,11 @@ resource "google_compute_instance_template" "pythonapp-template" {
     boot         = true
   }
 
-  metadata_startup_script = data.template_file.startup_script_config.rendered
+  #metadata_startup_script = data.template_file.startup_script_config.rendered
 
+  metadata = {
+     user-data = data.template_file.startup_script_config.rendered
+  }
   network_interface {
     network = var.network
 

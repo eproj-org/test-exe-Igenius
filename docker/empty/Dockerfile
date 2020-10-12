@@ -25,8 +25,8 @@ RUN apt-get update && \
    cp ${APP_DIR}/*.py  ${APP_DIR}/web && \
    cp ${APP_DIR}/*.ini  ${APP_DIR}/conf && \
 	rm -rf /var/cache/apt/* && \
-   echo "[include]" > /etc/supervisord.conf && \
-	echo "files = ${APP_DIR}/conf/*.ini" >> /etc/supervisord.conf
+#   echo "[include]" > /etc/supervisord.conf && \
+	echo "files = ${APP_DIR}/conf/*.ini" >> /etc/supervisor/supervisord.conf
 
 USER pythonapp
 
@@ -37,4 +37,4 @@ VOLUME ["${APP_DIR}"]
 
 EXPOSE ${PORT}
 
-CMD ["supervisord", "-c", "/etc/supervisord.conf"]
+CMD ["supervisord", "-c", "/etc/supervisor/supervisord.conf"]

@@ -11,9 +11,13 @@ write_files:
   content: |
     [Unit]
     Description=Start a simple docker container with flask app
+    Wants=gcr-online.target
+    After=gcr-online.target
 
     [Service]
-    ExecStart=/usr/bin/docker run --rm -u 2000 --name=mycloudservice gcr.io/${project}/app-python:latest 
+    Environment="HOME=/home/pythonapp"
+    ExecStartPre=/usr/bin/docker-credential-gcr configure-docker
+    ExecStart=/usr/bin/docker run --rm -u 2000 --name=mycloudservice ${gcr_location}:latest 
     ExecStop=/usr/bin/docker stop mycloudservice
     ExecStopPost=/usr/bin/docker rm mycloudservice
 

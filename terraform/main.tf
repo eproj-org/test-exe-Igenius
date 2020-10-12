@@ -14,7 +14,7 @@ module "staging-pythonapp-pool" {
   env                      = "test"
   region                   = "us-central1"
   #machine_type             = "f1-micro"
-  compute_image            = "projects/debian-cloud/global/images/debian-10-buster-v20200910"
+  compute_image            = "projects/confidential-vm-images/global/images/cos-stable-85-13310-1041-14"
   #compute_image            = "projects/gce-uefi-images/global/images/family/ubuntu-1804-lts"
   update_strategy          = "REPLACE"
   autoscaling_min_replicas = 1
