@@ -77,3 +77,70 @@ curl -vvv -G -d 'parent=projects/dotted-hulling-291009' http://<ip addr >:8080/a
 
 curl -vvv -G -d 'project=dotted-hulling-291009' -d 'zone=us-central1-a' http://127.0.0.1:8080/compute.list
 
+
+
+BRANCH FLSKINDOCKER
+
+helper for cli docker pull/push used : gcloud auth configure-docker
+
+the service account in vm (nbr2 in previous note ) should have "container registry agent" credentials
+B
+B
+B
+B
+B
+B
+B
+B
+B
+B
+B
+B
+B
+B
+B
+B
+B
+B
+B
+B
+B
+B
+B
+B
+B
+B
+B
+B
+B
+B
+B
+B
+B
+B
+B
+B
+B
+B
+B
+B
+B
+B
+B
+B
+B
+B
+B
+B
+B
+B
+B
+B
+B
+B
+B
+B
+B
+B
+B
+
