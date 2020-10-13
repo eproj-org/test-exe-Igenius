@@ -25,11 +25,9 @@ RUN apt-get update && \
    cp ${APP_DIR}/*.ini  ${APP_DIR}/conf && \
    chown -R pythonapp:pythonapp ${APP_DIR} && \
 	rm -rf /var/cache/apt/* && \
-#   echo "[include]" > /etc/supervisord.conf && \
    mkdir -p /var/log/supervisord && \
 	echo "files = ${APP_DIR}/conf/*.ini" >> /etc/supervisor/supervisord.conf
 
-USER pythonapp
 
 # copy config files
 COPY ./app ${APP_DIR}

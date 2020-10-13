@@ -17,7 +17,7 @@ write_files:
     [Service]
     Environment="HOME=/home/pythonapp"
     ExecStartPre=/usr/bin/docker-credential-gcr configure-docker
-    ExecStart=/usr/bin/docker run --rm -u 2000 --name=mycloudservice -p 8080:8080 ${gcr_location}:latest 
+    ExecStart=/usr/bin/docker run --rm  --name=mycloudservice -p 8080:8080 ${gcr_location}:latest 
     ExecStop=/usr/bin/docker stop mycloudservice
     ExecStopPost=/usr/bin/docker rm mycloudservice
 
