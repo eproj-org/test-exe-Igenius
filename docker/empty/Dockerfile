@@ -18,14 +18,15 @@ RUN apt-get update && \
    mkdir -p ${APP_DIR} && \
    git clone --single-branch --branch  flskindocker https://github.com/eproj-org/test-exe-Igenius.git ${APP_DIR} && \
    #git clone https://github.com/eproj-org/test-exe-Igenius.git ${APP_DIR} && \
-   chown -R pythonapp:pythonapp ${APP_DIR} && \
 	mkdir -p ${APP_DIR}/web && \
 	mkdir -p ${APP_DIR}/conf && \
 	mkdir -p ${APP_DIR}/logs && \
    cp ${APP_DIR}/*.py  ${APP_DIR}/web && \
    cp ${APP_DIR}/*.ini  ${APP_DIR}/conf && \
+   chown -R pythonapp:pythonapp ${APP_DIR} && \
 	rm -rf /var/cache/apt/* && \
 #   echo "[include]" > /etc/supervisord.conf && \
+   mkdir -p /var/log/supervisord && \
 	echo "files = ${APP_DIR}/conf/*.ini" >> /etc/supervisor/supervisord.conf
 
 USER pythonapp
@@ -36,5 +37,7 @@ COPY ./app ${APP_DIR}
 VOLUME ["${APP_DIR}"]
 
 EXPOSE ${PORT}
+
+USER root
 
 CMD ["supervisord", "-c", "/etc/supervisor/supervisord.conf"]
