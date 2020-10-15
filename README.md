@@ -81,66 +81,34 @@ curl -vvv -G -d 'project=dotted-hulling-291009' -d 'zone=us-central1-a' http://1
 
 BRANCH FLSKINDOCKER
 
-helper for cli docker pull/push used : gcloud auth configure-docker
+Notes:
 
-the service account in vm (nbr2 in previous note ) should have "container registry agent" credentials
-B
-B
-B
-B
-B
-B
-B
-B
-B
-B
-B
-B
-B
-B
-B
-B
-B
-B
-B
-B
-B
-B
-B
-B
-B
-B
-B
-B
-B
-B
-B
-B
-B
-B
-B
-B
-B
-B
-B
-B
-B
-B
-B
-B
-B
-B
-B
-B
-B
-B
-B
-B
-B
-B
-B
-B
-B
-B
-B
+1) the helper for cli docker pull/push used is: gcloud auth configure-docker
 
+2) the service account in vm (nbr2 in previous note ) should have "container registry agent" credentials
+
+3) the container is intented to be used for development phases (it fetches from github repository a branch in dev for example). in addition to this the python files can be patched ( mounting Cos filesystem xx/empty directory and copying the files to modify on VOLUME in the container)
+
+4) the logging agent is not installed but can be containerized as well . The logs files could be shared between Host and container but is a burden (keep in mind that in Cos  the main part of filesystem is ephemeral..). The best solution is to get stdout/stder at docker level and redirect towards the agent. TBD
+
+
+PROJECTs INITIALIZATION
+
+The projects here are assumeed to be already existent (and in part configured)
+The service API enabled for this project (in addition to thse already enable by default - no doc exists on by default enabled) are : 
+
+- cloudasset.googleapis.com         Cloud Asset API
+- containerregistry.googleapis.com  Container Registry API
+
+ the object terraform to enable apis is :
+
+```
+# Enable services in newly created GCP Project.
+resource "google_project_service" "gcp_services" {
+  count   = length(var.gcp_service_list)
+  project = google_project.demo_project.project_id    ### Project managed/created by terraform
+  service = var.gcp_service_list[count.index]
+
+  disable_dependent_services = true
+}
+```
