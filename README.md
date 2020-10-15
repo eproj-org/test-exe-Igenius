@@ -77,3 +77,23 @@ curl -vvv -G -d 'parent=projects/dotted-hulling-291009' http://<ip addr >:8080/a
 
 curl -vvv -G -d 'project=dotted-hulling-291009' -d 'zone=us-central1-a' http://127.0.0.1:8080/compute.list
 
+PROJECTs INITIALIZATION
+
+The projects here are assumeed to be already existent (and in part configured)
+The service API enabled for this project (in addition to thse already enable by default - no doc exists on by default enabled) are : 
+
+- cloudasset.googleapis.com         Cloud Asset API
+- containerregistry.googleapis.com  Container Registry API
+
+ the object terraform to enable apis is :
+
+```
+# Enable services in newly created GCP Project.
+resource "google_project_service" "gcp_services" {
+  count   = length(var.gcp_service_list)
+  project = google_project.demo_project.project_id    ### Project managed/created by terraform
+  service = var.gcp_service_list[count.index]
+
+  disable_dependent_services = true
+}
+```
